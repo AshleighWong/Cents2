@@ -80,16 +80,25 @@ def login():
     access_token = create_access_token(identity=str(user[0]['_id']))
     return jsonify(access_token=access_token), 200
 
-@app.route('/api/user', methods=['GET'])
+# @app.route('/api/user', methods=['GET'])
+# @jwt_required()
+# def get_user():
+#     current_user_id = get_jwt_identity()
+#     user = atlas_client.find('info', {'_id': current_user_id}, limit=1)
+#     if user:
+#         user_data = user[0]
+#         del user_data['password']  # Don't send the password hash
+#         return jsonify(user_data), 200
+#     return jsonify({"message": "User not found"}), 404
+@app.route('/api/user/<user_id>', methods=['GET'])
 @jwt_required()
-def get_user():
-    current_user_id = get_jwt_identity()
-    user = atlas_client.find('info', {'_id': current_user_id}, limit=1)
+def get_user(user_id):
+    user = atlas_client.find('info', {'_id': user_id}, limit=1)
     if user:
         user_data = user[0]
         del user_data['password']  # Don't send the password hash
         return jsonify(user_data), 200
-    return jsonify({"message": "User not found"}), 404
+    return jsonify({"message": "User not found"}), 40
 
 @app.route('/api/user', methods=['PUT'])
 @jwt_required()
